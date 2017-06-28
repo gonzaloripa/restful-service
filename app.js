@@ -8,7 +8,7 @@ var express = require('express'),
 app = express(); // crea instancia del framework express
 app.use(bodyParser.json()); //se procesan tramas json
 
-const phantom = require('phantom');
+const phantom = require('phantomjs');
 
 (async function() {
     const instance = await phantom.create();
