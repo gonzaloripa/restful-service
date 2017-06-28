@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start ": "node app.js",
+    "start ": "./node_modules/.bin/babel-node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -14,5 +14,8 @@
     "body-parser": "^1.17.2",
     "express": "^4.15.3",
     "phantomjs": "^2.1.7"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.24.1"
   }
 }
