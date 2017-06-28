@@ -8,26 +8,29 @@ var express = require('express'),
 app = express(); // crea instancia del framework express
 app.use(bodyParser.json()); //se procesan tramas json
 
-var phantom = require("phantom");
-var _ph, _page, _outObj;
+const phantom = require('phantom');
 
-phantom.create().then(ph => {
-    _ph = ph;
-    return _ph.createPage();
-}).then(page => {
-    _page = page;
-    return _page.open('http://cielosports.com/nota/73329/no_logra_levantar_cabeza/');
-}).then(status => {
+(async function() {
+    const instance = await phantom.create();
+    const page = await instance.createPage();
+    await page.on("onResourceRequested", function(requestData) {
+        console.info('Requesting', requestData.url)
+    });
+
+    const status = await page.open('http://cielosports.com/nota/73329/no_logra_levantar_cabeza/');
     console.log(status);
-    return _page.evaluate(function() {
+
+    page.evaluate(function() {
         return document.getElementsByClassName("cuerpo-nota")[0].getElementsByTagName("p")[0].innerHTML;
     }).then(function(html){
         console.log(html);
         global.content = html;
-    }); 
-    _page.close();
-    _ph.exit()
-}).catch(e => console.log(e));
+    });
+//    const content = await page.property('content');
+//    console.log(content);
+
+    await instance.exit();
+}());
 
 
 router = express.Router(); //crea objeto tipo express.Router, que permite procesar peticiones http
