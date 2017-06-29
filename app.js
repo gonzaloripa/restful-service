@@ -42,6 +42,6 @@ router.get('/', function(req, res){
 
 app.use('/noticia',router); //publica url /products
 server = http.createServer(app); //crea servidor http, usa instancia de express
-server.listen(4567,'restfulapi-notice.herokuapp.com', function(){
+server.listen(process.env.PORT,process.env.IP, function(){
 	console.log('https://restfulapi-notice.herokuapp.com/noticia');
 });
