@@ -8,7 +8,7 @@ var express = require('express'),
 app = express(); // crea instancia del framework express
 app.use(bodyParser.json()); //se procesan tramas json
 
-var phantom = require("phantom");
+var phantom = require("phantomjs");
 var _ph, _page, _outObj;
 
 phantom.create().then(ph => {
@@ -42,6 +42,6 @@ router.get('/', function(req, res){
 
 app.use('/noticia',router); //publica url /products
 server = http.createServer(app); //crea servidor http, usa instancia de express
-server.listen(4567,'https://restfulapi-notice.herokuapp.com', function(){
+server.listen(4567,'https://restfulapi-notice.herokuapp.com/noticia', function(){
 	console.log('https://restfulapi-notice.herokuapp.com/noticia');
 });
