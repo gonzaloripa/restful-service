@@ -8,7 +8,7 @@ var express = require('express'),
 app = express(); // crea instancia del framework express
 app.use(bodyParser.json()); //se procesan tramas json
 
-var phantom = require("phantomjs");
+var phantom = require("phantom");
 var _ph, _page, _outObj;
 
 phantom.create().then(ph => {
