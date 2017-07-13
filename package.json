@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "engines": {
-    "node": "6.9.4"
+    "node": "6.11.1"
   },
   "scripts": {
     "start ": "node app.js",
@@ -16,7 +16,8 @@
   "dependencies": {
     "body-parser": "^1.17.2",
     "express": "^4.15.3",
-    "phantom": "^4.0.4"
+    "phantom": "^4.0.4",
+    "alexa-sdk": "^1.0.0"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1"
