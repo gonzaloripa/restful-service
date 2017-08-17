@@ -1,47 +1,19 @@
-var express = require('express'), 
-		bodyParser = require('body-parser'), 
-		http = require('http'), 
-		app, 
-		router, 
-		server;
+//Contiene la info de configuración de la app
+var express = require('express');
+var bodyParser = require('body-parser');
+var app = express(); // crea instancia del framework express
+//var db = require('./db'); //La app sabe que hay una conexion a la base disponible
 
-app = express(); // crea instancia del framework express
+var ContentController = require('./content/ContentController'); //Requerimos el Router del controlador de usuarios
 app.use(bodyParser.json()); //se procesan tramas json
-
-var phantom = require("phantom");
-var _ph, _page, _outObj;
-
-phantom.create().then(ph => {
-    _ph = ph;
-    return _ph.createPage();
-}).then(page => {
-    _page = page;
-    return _page.open('http://cielosports.com/nota/73329/no_logra_levantar_cabeza/');
-}).then(status => {
-    console.log(status);
-    return _page.evaluate(function() {
-        return document.getElementsByClassName("cuerpo-nota")[0].getElementsByTagName("p")[0].innerHTML;
-    }).then(function(html){
-        console.log(html);
-        global.content = html;
-    }); 
-    _page.close();
-    _ph.exit()
-}).catch(e => console.log(e));
+app.use('/noticia', ContentController); //Con app.use()lo vinculamos a la ruta /noticia. Ahora la ruta / definida en el controlador se va a mapear a /noticia
 
 
-router = express.Router(); //crea objeto tipo express.Router, que permite procesar peticiones http
-router.get('/', function(req, res){
-	res.json([     //retornar arreglo de productos
-			{
-				id:1,
-				cont: content
-			}
-		]);
-});
+module.exports = app;
 
-app.use('/noticia',router); //publica url /products
-server = http.createServer(app); //crea servidor http, usa instancia de express
-server.listen(process.env.PORT,process.env.IP, function(){
-	console.log('https://restfulapi-notice.herokuapp.com/noticia');
-});
+
+
+
+
+
+
