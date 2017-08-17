@@ -6,6 +6,6 @@ var https= require('https');
 
 server = https.createServer(app); //crea servidor http, usa instancia de express
 var server = app.listen(port, function() {  //Arranca el server
-  console.log('Express server listening on port ' + port +'. Open: ' +ip+'/noticia');
+  console.log('Express server listening on port ' + port);
 });
 
