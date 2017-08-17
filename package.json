@@ -15,8 +15,7 @@
     "asyncawait": "^1.0.6",
     "body-parser": "^1.17.2",
     "express": "^4.15.3",
-    "phantom": "^4.0.4",
-    "mongoose": "^4.8.5"
+    "phantom": "^4.0.4"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1"
