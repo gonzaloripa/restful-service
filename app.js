@@ -1,6 +1,6 @@
 var express = require('express'), 
 		bodyParser = require('body-parser'), 
-		http = require('https'), 
+		http = require('http'), 
 		app, 
 		router, 
 		server;
@@ -22,7 +22,7 @@ phantom.create().then(ph => {
     return _page.evaluate(function() {
         return document.getElementsByClassName("cuerpo-nota")[0].getElementsByTagName("p")[0].innerHTML;
     }).then(function(html){
-        console.log(html);
+        //console.log(html);
         global.content = html;
     }); 
     _page.close();
@@ -42,6 +42,6 @@ router.get('/', function(req, res){
 
 app.use('/noticia',router); //publica url /noticia
 server = http.createServer(app); //crea servidor http, usa instancia de express
-server.listen(process.env.PORT || 3000,process.env.IP ||'localhost', function(){  //process.env.PORT,process.env.IP
+server.listen(process.env.PORT,process.env.IP, function(){  //process.env.PORT,process.env.IP
 	console.log('https://restfulapi-notice.herokuapp.com/noticia');
 });
