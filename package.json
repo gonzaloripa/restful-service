@@ -2,12 +2,18 @@
   "name": "rest",
   "version": "1.0.0",
   "description": "",
+<<<<<<< HEAD
   "main": "app.js",
   "engines": {
     "node": "6.9.4"
   },
   "scripts": {
     "start ": "node app.js",
+=======
+  "main": "server.js",
+  "scripts": {
+    "start ": "node server.js",
+>>>>>>> e4396652462373c556ffb3ea2d8b203156b079ad
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
