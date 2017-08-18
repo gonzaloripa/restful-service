@@ -1,6 +1,6 @@
 var express = require('express'), 
 		bodyParser = require('body-parser'), 
-		http = require('https'), 
+		http = require('http'), 
 		app, 
 		router, 
 		server;
