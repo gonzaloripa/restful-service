@@ -1,6 +1,6 @@
 var express = require('express'), 
 		bodyParser = require('body-parser'), 
-		http = require('http'), 
+		http = require('https'), 
 		app, 
 		router, 
 		server;
@@ -42,6 +42,6 @@ router.get('/', function(req, res){
 
 app.use('/noticia',router); //publica url /noticia
 server = http.createServer(app); //crea servidor http, usa instancia de express
-server.listen(8888,'localhost', function(){  //process.env.PORT,process.env.IP
+server.listen(process.env.PORT || 3000,process.env.IP ||'localhost', function(){  //process.env.PORT,process.env.IP
 	console.log('https://restfulapi-notice.herokuapp.com/noticia');
 });
