@@ -2,16 +2,20 @@
 var express = require('express');
 var router = express.Router();//Permite crear el subconjunto de rutas que son independientes de la aplicacion completa
 //router = express.Router(); //crea objeto tipo express.Router, que permite procesar peticiones http
-var bodyParser = require('body-parser');//Utilizado para manejar los datos, util para cuando se envien datos a traves de http request por  un formulario
+var bodyParser = require('body-parser');//Utilizado para manejar los datos, util para cuando se envien datos a traves de http post por un formulario
 
-//router.use(bodyParser.urlencoded({ extended: true }));
+router.use(bodyParser.urlencoded({ extended: true }));
 //var Content = require('./Content'); //Modelo de user (del módulo mongoose). Se obtienen automaticamente todos los metodos necesarios para interactuar con la bbdd, incluyendo create, read, update y delete
 
-var phantom = require("phantom");
+var EventEmitter = require("events").EventEmitter;
+var body = new EventEmitter();
 
+global.content="";
 
-
-
+body.on('update', function (url,className) {
+    console.info('\n\nCall completed '+ url + className); // HOORAY! THIS WORKS!
+    
+    var phantom = require("phantom");
 
     var _ph, _page, _outObj;
     phantom.create().then(ph => {
@@ -19,24 +23,28 @@ var phantom = require("phantom");
         return _ph.createPage();
     }).then(page => {
         _page = page;
-        return _page.open('http://cielosports.com/nota/73329/no_logra_levantar_cabeza/');
+        return _page.open(url); //'http://cielosports.com/nota/73329/no_logra_levantar_cabeza/'
     }).then(status => {
         console.log(status);
-        return _page.evaluate(function() {
-            return document.getElementsByClassName("cuerpo-nota")[0].getElementsByTagName("p")[0].innerHTML;
-        }).then(function(html){
-            //console.log(html);
-            global.content = html;
-       
+        return _page.evaluate(function(c) {
+            return document.getElementsByClassName(c)[0].getElementsByTagName("p")[0].innerHTML; //"cuerpo-nota"
+        },className).then(function(html){
+            //console.log("lo hizo " + className);
+            content = html;
+            //body.emit("ready");
+          
         }); 
         _page.close();
         _ph.exit()
     }).catch(e => console.log(e));
+});
 
+body.on("ready",function(){
 
+});
 
 //Operaciones CRUD para interactuar con la base en REST: se usan los request HTTP para las acciones
-
+/*
 // CREATES A NEW USER
 router.post('/', function (req, res) { //Post: envia datos al servidor. Tiene 2 parametros: el primero la ruta asignada a la funcion anonima que es el segundo parametro.
                                        //La funcion tiene 2 parametros, uno representa el request al servidor y el otro la response 
@@ -52,20 +60,59 @@ router.post('/', function (req, res) { //Post: envia datos al servidor. Tiene 2 
 });
 
 // RETURNS ALL THE USERS IN THE DATABASE
-/*router.get('/', function (req, res) { //Get: obtiene datos del servidor. Mismos dos parametros que .post(). Dentro de la funcion se invoca al metodo find() del modelo user para retornar valores de la BBDD.
+router.get('/', function (req, res) { //Get: obtiene datos del servidor. Mismos dos parametros que .post(). Dentro de la funcion se invoca al metodo find() del modelo user para retornar valores de la BBDD.
     User.find({}, function (err, users) { //2 parametros: un objeto que define que requisitos deben cumplir los valores a retornar, es un filtro tipo la clausula Where de sql (como en este caso es vacio, se devuelven todos los usuarios de la base)  y una funcion callback
         if (err) return res.status(500).send("There was a problem finding the users.");
         res.status(200).send(users); //Se muestran los datos de todos los usuarios
     });
 });
 */
+router.post('/direc', function(req,res){
+    console.log("Post was called.");
+    res.writeHead(200, {"Content-Type": "text/plain"});
+    res.write("You've sent the params: "+ req.body.url+" and "+req.body.class);
+    res.end();
+    //body.data = querystring.parse(postData).text;
+    body.emit('update',req.body.url,req.body.class);
+
+});
 router.get('/', function(req, res){
-        res.json([     //retornar arreglo de noticias
-            {
-                id:1,
-                cont: content
-            }
-        ]);
+        console.log(content);
+            if (content !== ""){
+                res.json([     //retornar arreglo de noticias
+                {
+                    id:1,
+                    cont: content
+                }
+                ]);
+            }else{
+                res.writeHead(404, {"Content-Type": "text/plain"});
+                res.write("Obteniendo el texto de la url solicitada...");
+                res.end();                
+            } 
+
+});
+
+router.get('/input', function(req, res){
+    var body = '<html>'+
+    '<head>'+
+    '<meta http-equiv="Content-Type" content="text/html; '+
+    'charset=UTF-8" />'+
+    '</head>'+
+    '<body>'+
+    '<form action="/noticia/direc" method="post">'+
+    '<label for="url">Url:</label>'+
+    '<input type="text" name="url" id="url"></input>'+
+    '<label for="class">Class name:</label>'+
+    '<input type="text" name="class" id="class"></input>'+
+    '<input type="submit" value="Submit text" />'+
+    '</form>'+
+    '</body>'+
+    '</html>';
+    res.writeHead(200, {"Content-Type": "text/html"});
+    res.write(body);
+    res.end();
+
 });
 
 
