@@ -1,7 +1,7 @@
 //Indica en que puerto debe escuchar la app
 var app = require('./app');
-var port = 3000//process.env.PORT;//||3000
-var ip = 'localhost'//process.env.IP;// || 'localhost'
+var port = process.env.PORT;//||3000
+var ip = process.env.IP;// || 'localhost'
 var http = require('http'); 
 
 var server = http.createServer(app); //crea servidor http, usa instancia de express
