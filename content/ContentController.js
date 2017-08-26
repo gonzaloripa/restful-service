@@ -12,7 +12,7 @@ var body = new EventEmitter();
 
 global.content="";
 
-body.on('update', function (url,className) {
+body.on('update', function (url,className,res) {
     console.info('\n\nCall completed '+ url + className); // HOORAY! THIS WORKS!
     
     var phantom = require("phantom");
@@ -31,6 +31,7 @@ body.on('update', function (url,className) {
         },className).then(function(html){
             //console.log("lo hizo " + className);
             content = html;
+            res.redirect('/noticia');
             //body.emit("ready");
           
         }); 
@@ -69,27 +70,28 @@ router.get('/', function (req, res) { //Get: obtiene datos del servidor. Mismos 
 */
 router.post('/direc', function(req,res){
     console.log("Post was called.");
-    res.writeHead(200, {"Content-Type": "text/plain"});
-    res.write("You've sent the params: "+ req.body.url+" and "+req.body.class);
-    res.end();
+    //res.writeHead(200, {"Content-Type": "text/plain"});
+    //res.write("Obteniendo el texto de la url solicitada...");
+    //res.end();
     //body.data = querystring.parse(postData).text;
-    body.emit('update',req.body.url,req.body.class);
-
+    body.emit('update',req.body.url,req.body.class,res);
 });
+
 router.get('/', function(req, res){
-        console.log(content);
-            if (content !== ""){
-                res.json([     //retornar arreglo de noticias
+        
+            if(content == ""){
+                console.log("entra");
+                res.redirect("/noticia/input");                
+            }
+            else{
+            res.json([     //retornar arreglo de noticias
                 {
                     id:1,
                     cont: content
                 }
-                ]);
-            }else{
-                res.writeHead(404, {"Content-Type": "text/plain"});
-                res.write("Obteniendo el texto de la url solicitada...");
-                res.end();                
-            } 
+            ]);
+            res.end();
+            }
 
 });
 
