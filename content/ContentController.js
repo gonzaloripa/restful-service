@@ -22,11 +22,16 @@ body.on('update', function (url,className,res) {
         return _ph.createPage();
     }).then(page => {
         _page = page;
-        return _page.open(url); //'http://cielosports.com/nota/73329/no_logra_levantar_cabeza/'
+        return _page.open(url); //'http://cielosports.com/nota/75036/tuvimos_ese_espiritu_ganador_remarco_fernando_zuqui/'
     }).then(status => {
         console.log(status);
         return _page.evaluate(function(c) {
-            return document.getElementsByClassName(c)[0].getElementsByTagName("p")[0].innerHTML; //"cuerpo-nota"
+            var parrafos = document.getElementsByClassName(c)[0].getElementsByTagName("p");//"cuerpo-nota"
+            var texto="";
+            for(i=0; i< parrafos.length; i++){
+                texto += parrafos[i].innerHTML;
+            }
+            return texto;//"cuerpo-nota"
         },className).then(function(html){
             //console.log("lo hizo " + className);
             content = html;
