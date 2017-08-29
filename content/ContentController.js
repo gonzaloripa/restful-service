@@ -29,7 +29,7 @@ body.on('update', function (url,className,res) {
             var parrafos = document.getElementsByClassName(c)[0].getElementsByTagName("p");//"cuerpo-nota"
             var texto="";
             for(i=0; i< parrafos.length; i++){
-                texto += parrafos[i].innerHTML;
+                texto += parrafos[i].innerText;
             }
             return texto;//"cuerpo-nota"
         },className).then(function(html){
