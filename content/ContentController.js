@@ -10,6 +10,7 @@ var EventEmitter = require("events").EventEmitter;
 var body = new EventEmitter();
 
 global.content="";
+global.title="";
 
 body.on('update', function (url,className,res) {
     console.info('\n\nCall completed '+ url + className); 
@@ -28,13 +29,15 @@ body.on('update', function (url,className,res) {
         return _page.evaluate(function(c) {
             var parrafos = document.getElementsByClassName(c)[0].getElementsByTagName("p");//"cuerpo-nota"
             var texto="";
+            var titulo = document.getElementsByTagName("title")[0].innerText;
             for(i=0; i< parrafos.length; i++){
                 texto += parrafos[i].innerText;
             }
-            return texto;//"cuerpo-nota"
+            return [texto,titulo];//"cuerpo-nota"
         },className).then(function(html){
             //console.log("lo hizo " + className);
-            content = html;
+            content = html[0];
+            title= html[1];
             res.redirect('/noticia');
             //body.emit("ready");
           
@@ -61,13 +64,15 @@ router.get('/', function(req, res){
                 res.redirect("/noticia/input");                
             }
             else{
+            res.set("Content-Type","application/json");
             res.json([     //retornar arreglo de noticias
                 {
                     id:1,
-                    cont: content
+                    cont: content,
+                    title: title
                 }
             ]);
-            res.end();
+            
             }
 
 });
@@ -88,7 +93,8 @@ router.get('/input', function(req, res){
     '</form>'+
     '</body>'+
     '</html>';
-    res.writeHead(200, {"Content-Type": "text/html"});
+    res.status(200);
+    res.set("Content-Type","text/html");
     res.write(body);
     res.end();
 
