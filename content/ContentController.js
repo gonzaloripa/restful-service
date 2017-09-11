@@ -27,7 +27,7 @@ body.on('update', function (url,className,res) {
     }).then(status => {
         if (status == 'fail'){
            res.redirect('/noticia');
-        }
+        }else{
         console.log(status);
         return _page.evaluate(function(c) {
             var parrafos = document.getElementsByClassName(c)[0].getElementsByTagName("p");//"cuerpo-nota"
@@ -44,7 +44,8 @@ body.on('update', function (url,className,res) {
             res.redirect('/noticia');
             //body.emit("ready");
           
-        }); 
+        });
+        }//Cierra el else 
         _page.close();
         _ph.exit()
     }).catch(e => console.log(e));
