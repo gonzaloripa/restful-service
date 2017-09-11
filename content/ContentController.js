@@ -25,6 +25,9 @@ body.on('update', function (url,className,res) {
         _page = page;
         return _page.open(url); //'http://cielosports.com/nota/75036/tuvimos_ese_espiritu_ganador_remarco_fernando_zuqui/'
     }).then(status => {
+        if (status == fail){
+           res.redirect('/noticia');
+        }
         console.log(status);
         return _page.evaluate(function(c) {
             var parrafos = document.getElementsByClassName(c)[0].getElementsByTagName("p");//"cuerpo-nota"
